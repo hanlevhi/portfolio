@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hannah_white.html</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --text: #e0e0e0;
+            --dim: #666666;
+            --green: #00ff41;
+            --cyan: #00d4ff;
+            --yellow: #ffcc00;
+            --red: #ff3c3c;
+            --magenta: #ff00ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection {
+            background: var(--green);
+            color: var(--bg);
+        }
+
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Scanlines effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Terminal header */
+        .terminal-header {
+            border: 1px solid var(--dim);
+            margin-bottom: 30px;
+        }
+
+        .terminal-bar {
+            background: var(--dim);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: var(--red); }
+        .terminal-dot.yellow { background: var(--yellow); }
+        .terminal-dot.green { background: var(--green); }
+
+        .terminal-title {
+            margin-left: 20px;
+            font-size: 0.75rem;
+            color: var(--bg);
+        }
+
+        .terminal-content {
+            padding: 20px;
+        }
+
+        .prompt {
+            color: var(--green);
+        }
+
+        .command {
+            color: var(--cyan);
+        }
+
+        .output {
+            margin: 10px 0 20px 0;
+        }
+
+        /* ASCII art name */
+        .ascii-name {
+            color: var(--green);
+            font-size: 0.6rem;
+            line-height: 1.1;
+            white-space: pre;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        /* Navigation as commands */
+        nav {
+            margin: 30px 0;
+            border: 1px solid var(--dim);
+            padding: 15px 20px;
+        }
+
+        nav .nav-label {
+            color: var(--dim);
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 20px;
+        }
+
+        nav a {
+            color: var(--cyan);
+            text-decoration: none;
+            position: relative;
+        }
+
+        nav a::before {
+            content: '> ';
+            color: var(--dim);
+        }
+
+        nav a:hover {
+            color: var(--green);
+        }
+
+        nav a.active {
+            color: var(--green);
+        }
+
+        nav a.active::after {
+            content: ' [*]';
+            color: var(--yellow);
+        }
+
+        /* Content sections as code blocks */
+        .section {
+            margin: 30px 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--dim);
+            font-size: 0.75rem;
+        }
+
+        .section-header::before {
+            content: '/*';
+            color: var(--dim);
+        }
+
+        .section-header::after {
+            content: '*/';
+            color: var(--dim);
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--dim);
+        }
+
+        .code-block {
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid var(--green);
+            padding: 20px;
+            position: relative;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 20px 10px;
+            color: var(--dim);
+            font-size: 0.75rem;
+            text-align: right;
+            user-select: none;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-content {
+            margin-left: 50px;
+        }
+
+        .key {
+            color: var(--magenta);
+        }
+
+        .string {
+            color: var(--yellow);
+        }
+
+        .number {
+            color: var(--cyan);
+        }
+
+        .boolean {
+            color: var(--red);
+        }
+
+        .comment {
+            color: var(--dim);
+            font-style: italic;
+        }
+
+        /* Bio section */
+        .bio-text {
+            color: var(--text);
+            max-width: 600px;
+        }
+
+        .bio-text strong {
+            color: var(--green);
+            font-weight: 500;
+        }
+
+        /* Experience as JSON */
+        .json-block {
+            background: transparent;
+            border: 1px solid var(--dim);
+            padding: 0;
+        }
+
+        .json-header {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--dim);
+            font-size: 0.75rem;
+            color: var(--dim);
+        }
+
+        .json-content {
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        .json-indent {
+            padding-left: 20px;
+        }
+
+        .json-indent-2 {
+            padding-left: 40px;
+        }
+
+        /* Award as system message */
+        .system-message {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--green);
+            padding: 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .system-message::before {
+            content: '[SYSTEM]';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--bg);
+            padding: 0 10px;
+            color: var(--green);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .system-message .award-title {
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        .system-message .award-meta {
+            color: var(--dim);
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+
+        /* Links as hyperlinks */
+        .links-section {
+            margin: 40px 0;
+            border: 1px dashed var(--dim);
+            padding: 20px;
+        }
+
+        .links-label {
+            color: var(--dim);
+            font-size: 0.75rem;
+            margin-bottom: 15px;
+        }
+
+        .link-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 30px;
+        }
+
+        .link-item {
+            color: var(--cyan);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: color 0.2s;
+        }
+
+        .link-item:hover {
+            color: var(--green);
+        }
+
+        .link-item::before {
+            content: '[';
+            color: var(--dim);
+            text-decoration: none;
+        }
+
+        .link-item::after {
+            content: ']';
+            color: var(--dim);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--dim);
+            color: var(--dim);
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--green);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Typing animation */
+        @keyframes typeIn {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typeIn 2s steps(40) both;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .ascii-name {
+                font-size: 0.35rem;
+            }
+            html {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal-header">
+            <div class="terminal-bar">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span class="terminal-title">hannah_white.html — bash — 80x24</span>
+            </div>
+            <div class="terminal-content">
+                <div>
+                    <span class="prompt">user@portfolio:~$</span>
+                    <span class="command"> cat identity.txt</span>
+                </div>
+                <pre class="ascii-name">
+██╗  ██╗ █████╗ ███╗   ██╗███╗   ██╗ █████╗ ██╗  ██╗
+██║  ██║██╔══██╗████╗  ██║████╗  ██║██╔══██╗██║  ██║
+███████║███████║██╔██╗ ██║██╔██╗ ██║███████║███████║
+██╔══██║██╔══██║██║╚██╗██║██║╚██╗██║██╔══██║██╔══██║
+██║  ██║██║  ██║██║ ╚████║██║ ╚████║██║  ██║██║  ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝
+██╗    ██╗██╗  ██╗██╗████████╗███████╗
+██║    ██║██║  ██║██║╚══██╔══╝██╔════╝
+██║ █╗ ██║███████║██║   ██║   █████╗
+██║███╗██║██╔══██║██║   ██║   ██╔══╝
+╚███╔███╔╝██║  ██║██║   ██║   ███████╗
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝   ╚═╝   ╚══════╝</pre>
+                <div class="output">
+                    <span class="dim">// Chief Product Officer | IoT | Product Design</span>
+                </div>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav-label">/* NAVIGATION */</div>
+            <ul>
+                <li><a href="#" class="active">about</a></li>
+                <li><a href="#">product_mgmt</a></li>
+                <li><a href="#">product_design</a></li>
+                <li><a href="#">brand</a></li>
+            </ul>
+        </nav>
+
+        <section class="section">
+            <div class="section-header">
+                <span>ABOUT</span>
+                <span class="section-line"></span>
+            </div>
+            <div class="code-block">
+                <div class="line-numbers">
+                    1<br>2<br>3<br>4<br>5<br>6<br>7<br>8
+                </div>
+                <div class="code-content">
+                    <p class="bio-text">
+                        Hi, I'm Hannah. I'm a <strong>product leader</strong>
+                        in the internet of things space.
+                    </p>
+                    <br>
+                    <p class="bio-text">
+                        Multi-disciplinary product manager & leader by way of
+                        product design. Currently leading product management and
+                        product design at Leverege building the IoT Stack.
+                    </p>
+                    <br>
+                    <p class="bio-text comment">
+                        // In my free time: hiking Shenandoah, pottery, oil painting
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <span>EXPERIENCE</span>
+                <span class="section-line"></span>
+            </div>
+            <div class="json-block">
+                <div class="json-header">experience.json</div>
+                <div class="json-content">
+                    <div>{</div>
+                    <div class="json-indent"><span class="key">"positions"</span>: [</div>
+                    <div class="json-indent-2">{</div>
+                    <div class="json-indent-2">  <span class="key">"role"</span>: <span class="string">"Chief Product Officer"</span>,</div>
+                    <div class="json-indent-2">  <span class="key">"company"</span>: <span class="string">"Leverege"</span>,</div>
+                    <div class="json-indent-2">  <span class="key">"current"</span>: <span class="boolean">true</span></div>
+                    <div class="json-indent-2">},</div>
+                    <div class="json-indent-2">{</div>
+                    <div class="json-indent-2">  <span class="key">"role"</span>: <span class="string">"Head of Product & Design"</span>,</div>
+                    <div class="json-indent-2">  <span class="key">"company"</span>: <span class="string">"IoT For All"</span>,</div>
+                    <div class="json-indent-2">  <span class="key">"current"</span>: <span class="boolean">false</span></div>
+                    <div class="json-indent-2">},</div>
+                    <div class="json-indent-2">{</div>
+                    <div class="json-indent-2">  <span class="key">"role"</span>: <span class="string">"Design Mentor"</span>,</div>
+                    <div class="json-indent-2">  <span class="key">"company"</span>: <span class="string">"Springboard"</span>,</div>
+                    <div class="json-indent-2">  <span class="key">"current"</span>: <span class="boolean">false</span></div>
+                    <div class="json-indent-2">}</div>
+                    <div class="json-indent">]</div>
+                    <div>}</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="system-message">
+            <span class="award-title">ACHIEVEMENT UNLOCKED: Best Tech Manager in Washington, DC</span>
+            <div class="award-meta">Timmy Awards — 2019</div>
+        </div>
+
+        <section class="links-section">
+            <div class="links-label">/* EXTERNAL LINKS */</div>
+            <div class="link-row">
+                <a href="#" class="link-item">linkedin.com/in/hannahwhite</a>
+                <a href="#" class="link-item">dribbble.com/hannahwhite</a>
+                <a href="#" class="link-item">mailto:hello@hannahwhite.com</a>
+            </div>
+        </section>
+
+        <footer>
+            <span>© 2024 hannah_white — source available on request</span>
+            <span>last modified: today<span class="cursor"></span></span>
+        </footer>
+    </div>
+</body>
+</html>

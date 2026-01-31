@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hannah White | Architectural Brutalist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --charcoal: #1c1c1c;
+            --warm-grey: #2d2a26;
+            --stone: #8c8578;
+            --cream: #f5f2eb;
+            --rust: #c45a3b;
+            --shadow: rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Asymmetric grid layout */
+        .page {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* Left monument column */
+        .monument {
+            grid-column: 1 / 3;
+            grid-row: 1 / -1;
+            background: var(--charcoal);
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px;
+        }
+
+        .name-vertical {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(4rem, 15vw, 10rem);
+            color: var(--cream);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+
+        .monument-footer {
+            color: var(--stone);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .monument-line {
+            width: 60px;
+            height: 3px;
+            background: var(--rust);
+            margin-bottom: 20px;
+        }
+
+        /* Main content area */
+        .content {
+            grid-column: 3 / 6;
+            padding: 80px 60px;
+            position: relative;
+        }
+
+        /* Navigation - horizontal stripe */
+        nav {
+            display: flex;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid var(--charcoal);
+            margin-bottom: 80px;
+        }
+
+        nav a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--stone);
+            text-decoration: none;
+            position: relative;
+            padding-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--charcoal);
+        }
+
+        nav a.active {
+            color: var(--charcoal);
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--rust);
+        }
+
+        /* Intro block - floating */
+        .intro-block {
+            position: relative;
+            margin-bottom: 120px;
+        }
+
+        .intro-label {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            font-size: 0.625rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--stone);
+        }
+
+        .intro-headline {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin-bottom: 40px;
+        }
+
+        .intro-headline span {
+            color: var(--rust);
+        }
+
+        .intro-body {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--stone);
+            max-width: 500px;
+        }
+
+        /* Photo block - offset */
+        .photo-section {
+            position: relative;
+            margin: 80px 0 120px -100px;
+            padding-left: 100px;
+        }
+
+        .photo-frame {
+            width: 300px;
+            height: 380px;
+            background: var(--warm-grey);
+            position: relative;
+        }
+
+        .photo-frame::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--rust);
+            z-index: -1;
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--stone);
+        }
+
+        /* Experience blocks - staggered */
+        .experience-section {
+            margin-bottom: 100px;
+        }
+
+        .section-title {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--charcoal);
+        }
+
+        .exp-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .exp-block {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 40px;
+            padding: 40px 0;
+            border-top: 1px solid var(--stone);
+            position: relative;
+            transition: padding-left 0.3s;
+        }
+
+        .exp-block:hover {
+            padding-left: 20px;
+        }
+
+        .exp-block:last-child {
+            border-bottom: 1px solid var(--stone);
+        }
+
+        .exp-num {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3rem;
+            color: var(--cream);
+            -webkit-text-stroke: 1px var(--charcoal);
+            line-height: 1;
+        }
+
+        .exp-content h3 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .exp-content .company {
+            font-size: 0.875rem;
+            color: var(--rust);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+        }
+
+        .exp-content p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--stone);
+        }
+
+        /* Award - dramatic slab */
+        .award-slab {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 60px;
+            margin: 80px -60px 80px 0;
+            position: relative;
+        }
+
+        .award-slab::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 30px;
+            width: 4px;
+            height: calc(100% - 60px);
+            background: var(--rust);
+        }
+
+        .award-year {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 5rem;
+            line-height: 1;
+            margin-bottom: 20px;
+            color: var(--stone);
+        }
+
+        .award-title {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+        }
+
+        .award-source {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--stone);
+        }
+
+        /* Links - minimal */
+        .links-section {
+            margin-top: 100px;
+            padding-top: 40px;
+            border-top: 2px solid var(--charcoal);
+        }
+
+        .links-grid {
+            display: flex;
+            gap: 60px;
+        }
+
+        .link-item {
+            text-decoration: none;
+            color: var(--charcoal);
+            position: relative;
+        }
+
+        .link-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rust);
+            transition: width 0.3s;
+        }
+
+        .link-item:hover::after {
+            width: 100%;
+        }
+
+        .link-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            display: block;
+            margin-bottom: 5px;
+            color: var(--stone);
+        }
+
+        .link-text {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.25rem;
+        }
+
+        /* Footer - nested in content */
+        footer {
+            margin-top: 120px;
+            padding-top: 30px;
+            border-top: 1px solid var(--stone);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--stone);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .intro-block {
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .photo-section {
+            animation: fadeUp 0.8s ease-out 0.2s both;
+        }
+
+        .exp-block {
+            animation: fadeUp 0.6s ease-out both;
+        }
+
+        .exp-block:nth-child(1) { animation-delay: 0.3s; }
+        .exp-block:nth-child(2) { animation-delay: 0.4s; }
+        .exp-block:nth-child(3) { animation-delay: 0.5s; }
+
+        .award-slab {
+            animation: slideIn 0.8s ease-out 0.6s both;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .page {
+                grid-template-columns: 1fr;
+            }
+            .monument {
+                grid-column: 1;
+                grid-row: auto;
+                min-height: auto;
+                position: relative;
+                padding: 40px;
+                flex-direction: row;
+                align-items: flex-end;
+            }
+            .name-vertical {
+                writing-mode: horizontal-tb;
+                transform: none;
+                font-size: 3rem;
+            }
+            .content {
+                grid-column: 1;
+                padding: 40px;
+            }
+            .photo-section {
+                margin-left: 0;
+                padding-left: 0;
+            }
+            .award-slab {
+                margin-right: -40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <aside class="monument">
+            <h1 class="name-vertical">Hannah<br>White</h1>
+            <div class="monument-footer">
+                <div class="monument-line"></div>
+                <p>Chief Product Officer</p>
+                <p>IoT × Design</p>
+            </div>
+        </aside>
+
+        <main class="content">
+            <nav>
+                <a href="#" class="active">About</a>
+                <a href="#">Product</a>
+                <a href="#">Design</a>
+                <a href="#">Brand</a>
+            </nav>
+
+            <section class="intro-block">
+                <span class="intro-label">Introduction</span>
+                <h2 class="intro-headline">
+                    I'm a <span>product leader</span> in the internet of things space.
+                </h2>
+                <p class="intro-body">
+                    Multi-disciplinary product manager & leader by way of product design. Currently leading product management and product design at Leverege building the Leverege IoT Stack.
+                </p>
+            </section>
+
+            <section class="photo-section">
+                <div class="photo-frame"></div>
+                <span class="photo-caption">Portrait — Washington, DC</span>
+            </section>
+
+            <section class="experience-section">
+                <h2 class="section-title">Experience</h2>
+                <div class="exp-grid">
+                    <article class="exp-block">
+                        <span class="exp-num">01</span>
+                        <div class="exp-content">
+                            <h3>Chief Product Officer</h3>
+                            <p class="company">Leverege</p>
+                            <p>Leading product management and design for the IoT Stack platform.</p>
+                        </div>
+                    </article>
+                    <article class="exp-block">
+                        <span class="exp-num">02</span>
+                        <div class="exp-content">
+                            <h3>Head of Product & Design</h3>
+                            <p class="company">IoT For All</p>
+                            <p>Shaping product strategy and design vision for IoT education.</p>
+                        </div>
+                    </article>
+                    <article class="exp-block">
+                        <span class="exp-num">03</span>
+                        <div class="exp-content">
+                            <h3>Design Mentor</h3>
+                            <p class="company">Springboard</p>
+                            <p>Mentoring the next generation of UX designers.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="award-slab">
+                <span class="award-year">2019</span>
+                <h3 class="award-title">Best Tech Manager in Washington, DC</h3>
+                <p class="award-source">Timmy Awards</p>
+            </section>
+
+            <section class="links-section">
+                <div class="links-grid">
+                    <a href="#" class="link-item">
+                        <span class="link-label">Network</span>
+                        <span class="link-text">LinkedIn</span>
+                    </a>
+                    <a href="#" class="link-item">
+                        <span class="link-label">Portfolio</span>
+                        <span class="link-text">Dribbble</span>
+                    </a>
+                    <a href="#" class="link-item">
+                        <span class="link-label">Contact</span>
+                        <span class="link-text">Email</span>
+                    </a>
+                </div>
+            </section>
+
+            <footer>
+                <span>© 2024 Hannah White</span>
+                <span>Built like a monument</span>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
