@@ -508,18 +508,36 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            body {
+                overflow: auto;
+                overflow-x: hidden;
+            }
+
             .mac-screen {
+                position: relative;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: auto;
                 height: auto;
                 min-height: 100vh;
+                margin: 0;
+            }
+
+            .menu-bar {
+                position: sticky;
+                top: 0;
+                z-index: 100;
             }
 
             .desktop {
                 position: relative;
                 height: auto;
-                padding: 60px 10px 20px;
+                padding: 15px 10px 30px;
                 display: flex;
                 flex-direction: column;
                 gap: 15px;
+                overflow: visible;
             }
 
             .desktop-icons {
@@ -534,6 +552,11 @@
                 display: block !important;
                 max-height: none;
                 opacity: 1 !important;
+            }
+
+            .window-content {
+                max-height: none !important;
+                overflow: visible !important;
             }
 
             .window .window-header {
