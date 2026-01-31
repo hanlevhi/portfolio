@@ -509,8 +509,10 @@
         /* Responsive */
         @media (max-width: 768px) {
             .window {
-                width: calc(100% - 80px) !important;
+                width: calc(100% - 20px) !important;
                 left: 10px !important;
+                max-height: 70vh;
+                overflow-y: auto;
             }
 
             .product-grid {
@@ -518,7 +520,38 @@
             }
 
             .desktop-icons {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px;
+                background: #fff;
+                border-top: 2px solid #000;
+                z-index: 500;
+                gap: 5px;
+            }
+
+            .desktop-icon {
+                margin: 0;
+            }
+
+            .desktop-icon .icon-img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .desktop-icon .icon-label {
+                font-size: 9px;
+            }
+
+            .trash-icon {
                 display: none;
+            }
+
+            .desktop {
+                padding-bottom: 80px;
             }
         }
     </style>
@@ -607,7 +640,7 @@
         <div class="desktop">
             <!-- Desktop Icons -->
             <div class="desktop-icons">
-                <div class="desktop-icon" ondblclick="openWindow('about')">
+                <div class="desktop-icon" ondblclick="openWindow('about')" onclick="openWindow('about')">
                     <div class="icon-img">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <rect x="4" y="2" width="16" height="20" fill="#fff" stroke="#000"/>
@@ -619,7 +652,7 @@
                     <span class="icon-label">About</span>
                 </div>
 
-                <div class="desktop-icon" ondblclick="openWindow('products')">
+                <div class="desktop-icon" ondblclick="openWindow('products')" onclick="openWindow('products')">
                     <div class="icon-img">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <rect x="2" y="4" width="20" height="16" fill="#fff" stroke="#000"/>
@@ -629,7 +662,7 @@
                     <span class="icon-label">Products</span>
                 </div>
 
-                <div class="desktop-icon" ondblclick="openWindow('writing')">
+                <div class="desktop-icon" ondblclick="openWindow('writing')" onclick="openWindow('writing')">
                     <div class="icon-img">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <rect x="5" y="2" width="14" height="20" fill="#fff" stroke="#000"/>
@@ -641,7 +674,7 @@
                     <span class="icon-label">Writing</span>
                 </div>
 
-                <div class="desktop-icon" ondblclick="openWindow('contact')">
+                <div class="desktop-icon" ondblclick="openWindow('contact')" onclick="openWindow('contact')">
                     <div class="icon-img">
                         <svg width="24" height="24" viewBox="0 0 24 24">
                             <rect x="2" y="5" width="20" height="14" fill="#fff" stroke="#000"/>
