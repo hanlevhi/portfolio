@@ -508,54 +508,44 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .mac-screen {
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .desktop {
+                position: relative;
+                height: auto;
+                padding: 60px 10px 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .desktop-icons {
+                display: none;
+            }
+
             .window {
-                width: calc(100% - 20px) !important;
-                left: 10px !important;
-                max-height: 70vh;
-                overflow-y: auto;
+                position: relative !important;
+                width: 100% !important;
+                left: 0 !important;
+                top: 0 !important;
+                display: block !important;
+                max-height: none;
+                opacity: 1 !important;
+            }
+
+            .window .window-header {
+                cursor: default;
+            }
+
+            .window .close-box {
+                display: none;
             }
 
             .product-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .desktop-icons {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 15px 10px;
-                background: #fff;
-                border-top: 2px solid #000;
-                z-index: 9999;
-                gap: 5px;
-                pointer-events: auto;
-            }
-
-            .desktop-icon {
-                margin: 0;
-                cursor: pointer;
-                -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-                padding: 8px;
-            }
-
-            .desktop-icon .icon-img {
-                width: 32px;
-                height: 32px;
-            }
-
-            .desktop-icon .icon-label {
-                font-size: 9px;
-            }
-
-            .trash-icon {
-                display: none;
-            }
-
-            .desktop {
-                padding-bottom: 80px;
             }
         }
     </style>
